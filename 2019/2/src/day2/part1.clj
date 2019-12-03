@@ -9,24 +9,25 @@
 
 (defn compute
   ([tape] (compute tape 0))
-  ([tape tape-head]
-   (let [opcode (tape tape-head)]
+  ([noun verb tape] (compute (assoc tape 1 noun 2 verb)))
+  ([tape instruction-pointer]
+   (let [opcode (tape instruction-pointer)]
      (if (= opcode 99)
        tape
-       (let [[_ x y result & tape-tail] (subvec tape tape-head)]
+       (let [[_ x y result & tape-tail] (subvec tape instruction-pointer)]
          (recur
            (case opcode
              1 (tape-add tape x y result)
              2 (tape-mul tape x y result))
-           (+ tape-head 4)))))))
+           (+ instruction-pointer 4)))))))
 
-(defn main
-  [& args]
+(defn input-to-vector [& forms]
   (->> (slurp *in*)
        (clojure.string/trim-newline)
        (#(clojure.string/split %1 #","))
        (map edn/read-string)
-       (#(assoc (apply vector %1) 1 12 2 2))
-       (compute)
-       (first)
-       (println)))
+       (apply vector)))
+
+(defn main
+  [& args]
+  (first (compute 12 2 (input-to-vector))))
