@@ -21,7 +21,7 @@
              2 (tape-mul tape x y result))
            (+ instruction-pointer 4)))))))
 
-(defn input-to-vector [& forms]
+(defn input-to-vector []
   (->> (slurp *in*)
        (clojure.string/trim-newline)
        (#(clojure.string/split %1 #","))
